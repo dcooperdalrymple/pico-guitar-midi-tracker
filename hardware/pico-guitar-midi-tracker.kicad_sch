@@ -2224,6 +2224,32 @@
     )
   )
 
+  (symbol (lib_id "Device:C_Polarized") (at 104.14 142.24 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
+    (uuid 6415786b-3dfd-4c29-8446-350b8c65f968)
+    (property "Reference" "C2" (at 107.95 140.081 0)
+      (effects (font (size 1.27 1.27)) (justify left))
+    )
+    (property "Value" "22uF" (at 107.95 142.621 0)
+      (effects (font (size 1.27 1.27)) (justify left))
+    )
+    (property "Footprint" "" (at 105.1052 146.05 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Datasheet" "~" (at 104.14 142.24 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (pin "1" (uuid 5d4561fb-8c96-4bb3-b985-01b5a0c89017))
+    (pin "2" (uuid 1f14126e-62a8-4f37-9aaf-e1c379b1f88c))
+    (instances
+      (project "pico-guitar-midi-tracker"
+        (path "/5d23c65d-b53e-49fe-b7b6-37427454671d"
+          (reference "C2") (unit 1)
+        )
+      )
+    )
+  )
+
   (symbol (lib_id "Connector:DIN-5_180degree") (at 236.22 116.84 180) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 65d351fb-86ee-4f9e-9b1b-042c3e5ff3db)
@@ -2376,32 +2402,6 @@
       (project "pico-guitar-midi-tracker"
         (path "/5d23c65d-b53e-49fe-b7b6-37427454671d"
           (reference "#PWR02") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "Device:C") (at 104.14 142.24 0) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid 7f0392e2-fbb1-40cd-ac6b-5f782688c715)
-    (property "Reference" "C3" (at 107.95 140.97 0)
-      (effects (font (size 1.27 1.27)) (justify left))
-    )
-    (property "Value" "C" (at 107.95 143.51 0)
-      (effects (font (size 1.27 1.27)) (justify left))
-    )
-    (property "Footprint" "" (at 105.1052 146.05 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "~" (at 104.14 142.24 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid 4f7f7844-741e-44f7-8587-01aefb59e613))
-    (pin "2" (uuid 2ee87fd1-2d70-4854-976e-b77d303efade))
-    (instances
-      (project "pico-guitar-midi-tracker"
-        (path "/5d23c65d-b53e-49fe-b7b6-37427454671d"
-          (reference "C3") (unit 1)
         )
       )
     )
@@ -2586,6 +2586,32 @@
       (project "pico-guitar-midi-tracker"
         (path "/5d23c65d-b53e-49fe-b7b6-37427454671d"
           (reference "U2") (unit 1)
+        )
+      )
+    )
+  )
+
+  (symbol (lib_id "Device:C_Polarized") (at 74.93 142.24 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
+    (uuid a55265cc-aeb5-46bd-985c-dc9561b83dd3)
+    (property "Reference" "C9" (at 78.74 140.081 0)
+      (effects (font (size 1.27 1.27)) (justify left))
+    )
+    (property "Value" "22uF" (at 78.74 142.621 0)
+      (effects (font (size 1.27 1.27)) (justify left))
+    )
+    (property "Footprint" "" (at 75.8952 146.05 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Datasheet" "~" (at 74.93 142.24 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (pin "1" (uuid 1742a9b8-036e-4b75-af3a-080091ba1998))
+    (pin "2" (uuid 8ca3651d-59fa-4d91-b546-9f7b5e058557))
+    (instances
+      (project "pico-guitar-midi-tracker"
+        (path "/5d23c65d-b53e-49fe-b7b6-37427454671d"
+          (reference "C9") (unit 1)
         )
       )
     )
@@ -3051,32 +3077,6 @@
       (project "pico-guitar-midi-tracker"
         (path "/5d23c65d-b53e-49fe-b7b6-37427454671d"
           (reference "#PWR09") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "Device:C") (at 74.93 142.24 0) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid f0e759eb-74b8-4ddf-9588-766fe9b2585b)
-    (property "Reference" "C2" (at 78.74 140.97 0)
-      (effects (font (size 1.27 1.27)) (justify left))
-    )
-    (property "Value" "C" (at 78.74 143.51 0)
-      (effects (font (size 1.27 1.27)) (justify left))
-    )
-    (property "Footprint" "" (at 75.8952 146.05 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "~" (at 74.93 142.24 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid 109ebb7e-d34e-4d59-9f57-6b30707ccd1c))
-    (pin "2" (uuid e3642868-a3a6-4c31-9b83-2b0ce1a9693d))
-    (instances
-      (project "pico-guitar-midi-tracker"
-        (path "/5d23c65d-b53e-49fe-b7b6-37427454671d"
-          (reference "C2") (unit 1)
         )
       )
     )
