@@ -17,12 +17,12 @@ pico_sdk_init()
 # rest of your project
 project(${NAME} C CXX ASM)
 
+# Main Program
 add_executable(${NAME}
     src/midi.cpp
     src/tracker.cpp
     src/main.cpp
 )
-
 target_link_libraries(${NAME}
     pico_stdlib
     pico_float
@@ -34,10 +34,21 @@ target_link_libraries(${NAME}
     hardware_dma
     pico_multicore
 )
-
 pico_enable_stdio_usb(${NAME} 1)
 pico_enable_stdio_uart(${NAME} 0)
-
 pico_add_extra_outputs(${NAME})
+
+# MIDI Test
+add_executable(${NAME}_midi
+    src/midi.cpp
+    src/tests/midi.cpp
+)
+target_link_libraries(${NAME}_midi
+    pico_stdlib
+    hardware_gpio
+)
+pico_enable_stdio_usb(${NAME}_midi 1)
+pico_enable_stdio_uart(${NAME}_midi 0)
+pico_add_extra_outputs(${NAME}_midi)
 
 pico_set_program_url(${NAME} ${URL})
