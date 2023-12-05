@@ -7,4 +7,4 @@ This project uses a modified version of the midi conversion script from [Rakarra
 
 * Configuring: `cmake -B build -S .`
 * Compiling/Building: `make -C build`
-* Writing: Hold BOOTSEL button on Pico, plug it in via USB, and release BOOTSEL. Copy and paste `rpi-pico-evse.uf2` into RPI-RP2 drive.
+* Writing: Hold BOOTSEL button on Pico, plug it in via USB, and release BOOTSEL. Copy and paste `build/pico-guitar-midi-tracker.uf2` into RPI-RP2 drive.
