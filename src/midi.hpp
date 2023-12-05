@@ -1,6 +1,12 @@
 #pragma once
 
 #include "pico/stdlib.h"
+#include "hardware/uart.h"
+
+#define BAUD_RATE           31250
+#define DATA_BITS           8
+#define STOP_BITS           1
+#define PARITY              UART_PARITY_NONE
 
 class Midi {
 

@@ -11,12 +11,12 @@ Midi::Midi() {
     // Set UART pins
     gpio_set_function(UART_TX_PIN, GPIO_FUNC_UART);
     gpio_set_function(UART_RX_PIN, GPIO_FUNC_UART);
-
-    // Enable Tx and Rx FIFOs on UART
-    uart_set_fifo_enabled(UART_ID, true);
-
-    // Disable cr/lf conversion on Tx
-    uart_set_translate_crlf(UART_ID, false);
+    
+    // Setup Format
+    uart_set_hw_flow(UART_ID, false, false);
+    uart_set_format(UART_ID, DATA_BITS, STOP_BITS, PARITY);
+    uart_set_translate_crlf(UART_ID, false); // Disable cr/lf conversion on Tx
+    uart_set_fifo_enabled(UART_ID, true); // Enable Tx and Rx FIFOs on UART
 
     setChannel(MIDI_CHANNEL);
 
@@ -35,14 +35,14 @@ uint8_t Midi::getChannel() {
 
 void Midi::sendNoteOn(uint8_t note, uint8_t velocity) {
     while (!uart_is_writable(UART_ID)) { } // blocking
-    uart_putc_raw(UART_ID, 0x90 + channel & 0x0f); // status
+    uart_putc_raw(UART_ID, 0x90 + (channel & 0x0f)); // status
     uart_putc_raw(UART_ID, note & 0x7f);
     uart_putc_raw(UART_ID, velocity & 0x7f);
 };
 
 void Midi::sendNoteOff(uint8_t note) {
     while (!uart_is_writable(UART_ID)) { } // blocking
-    uart_putc_raw(UART_ID, 0x80 + channel & 0x0f); // status
+    uart_putc_raw(UART_ID, 0x80 + (channel & 0x0f)); // status
     uart_putc_raw(UART_ID, note & 0x7f);
     uart_putc_raw(UART_ID, 0x00); // velocity
 };

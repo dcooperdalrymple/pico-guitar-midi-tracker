@@ -10,7 +10,6 @@
 
 // MIDI
 #define UART_ID             uart1
-#define BAUD_RATE           31250
 #define UART_TX_PIN         4
 #define UART_RX_PIN         5
 #define UART_BUFFER_SIZE    32
