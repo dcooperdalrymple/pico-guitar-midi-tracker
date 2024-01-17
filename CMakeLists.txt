@@ -21,6 +21,8 @@ project(${NAME} C CXX ASM)
 add_executable(${NAME}
     src/midi.cpp
     src/tracker.cpp
+    src/tracker_schmitt.cpp
+    src/tracker_fft.cpp
     src/main.cpp
 )
 target_link_libraries(${NAME}

@@ -25,13 +25,17 @@
 // Tracker
 #include "midi.hpp"
 #include "tracker.hpp"
+#include "tracker_fft.hpp"
+#include "tracker_schmitt.hpp"
+
+#define TRACKER TrackerFFT
 
 const char* const program_description = "Pico Guitar Midi Tracker v0.1";
 
 // ADC Capture Core
 
 Midi *midi;
-Tracker *tracker;
+TRACKER *tracker;
 
 uint dma_channel;
 uint8_t adc_buffer[BUFFER_COUNT][BUFFER_SIZE];
@@ -69,7 +73,7 @@ int main() {
 
     // setup midi
     midi = new Midi();
-    tracker = new Tracker(midi);
+    tracker = new TRACKER(midi);
 
     // setup adc
     adc_init();
@@ -120,7 +124,7 @@ int main() {
     int16_t val;
     while (1) {
         dma_channel_wait_for_finish_blocking(dma_channel);
-        tracker->schmittChar(BUFFER_SIZE, adc_buffer[adc_buffer_read_index]);
+        tracker->process(BUFFER_SIZE, adc_buffer[adc_buffer_read_index]);
     }
 
     adc_run(false);
