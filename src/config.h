@@ -3,7 +3,7 @@
 
 // ADC
 #define ADC_CHANNEL         0 // GPIO26
-#define SAMPLE_RATE         22050
+#define SAMPLE_RATE         44100
 #define BUFFER_SIZE         256
 #define BUFFER_COUNT        2
 #define LED_LVL_PIN         25
