@@ -58,10 +58,6 @@ midi = adafruit_midi.MIDI(
     out_channel=MIDI_CHANNEL,
 )
 
-# Calibrate ADC
-mid = np.max(get_buffer())
-level_max = min(mid, 2 ** 16 - mid)
-
 level = 0.0
 note = 0
 while True:
@@ -70,7 +66,9 @@ while True:
     buffer = get_buffer()
     
     # Calculate max level
-    current_level = min(max(abs((np.max(buffer) - mid) / level_max), 0.0), 1.0)
+    mean = int(np.mean(buffer))
+    mean_max = min(mean, 2 ** 16 - mean)
+    current_level = min(max(abs((np.max(buffer) - mean) / mean_max), 0.0), 1.0)
     led_level.duty_cycle = int(current_level * (2 ** 16 - 1))
 
     # Note no longer detected
@@ -87,7 +85,6 @@ while True:
         continue
     
     # Convert np.uint16 to np.int16
-    mean = int(np.mean(buffer))
     buffer = np.array([x - mean for x in buffer], dtype=np.int16)
 
     # Use the Fast Fourier Transform to determine the peak frequency of the signal
