@@ -9,17 +9,22 @@ import array
 import ulab.numpy as np
 
 SAMPLE_RATE = 44100
-BUFFER_SIZE = 4096
+BUFFER_SIZE = 256
 
 led = pwmio.PWMOut(board.LED)
 
 raw_buffer = array.array("H", [0x0000] * BUFFER_SIZE)
-buffer = np.array(raw_buffer, dtype=np.uint16)
-
 adc = analogbufio.BufferedIn(board.GP26, sample_rate=SAMPLE_RATE)
 
-while True:
+def get_buffer() -> np.ndarray:
     adc.readinto(raw_buffer)
-    level = abs((np.max(buffer) - 2 ** 15) / (2 ** 15))
-    led.duty_cycle = level * (2 ** 16 - 1)
+    return np.array(raw_buffer, dtype=np.uint16)
+
+# Calibrate ADC
+mid = np.max(get_buffer())
+level_max = min(mid, 2 ** 16 - mid)
+
+while True:
+    level = min(max(abs((np.max(get_buffer()) - mid) / level_max), 0.0), 1.0)
+    led.duty_cycle = int(level * (2 ** 16 - 1))
     print(level)

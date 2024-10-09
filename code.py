@@ -11,6 +11,7 @@ import math
 import analogbufio
 import array
 import ulab.numpy as np
+import ulab.utils
 
 # MIDI modules
 import busio
@@ -25,7 +26,7 @@ MIDI_CHANNEL = 0
 LEVEL_ATTACK = 0.5
 LEVEL_RELEASE = 0.2
 
-LOG2_A4 = math.log2(440)
+LOG2_A4 = math.log(440, 2)
 
 # Pin assignments
 led_level_pin, led_midi_pin = board.LED, board.GP2
@@ -36,9 +37,11 @@ uart_tx, uart_rx = board.GP4, board.GP5
 led_level = pwmio.PWMOut(led_level_pin)
 
 raw_buffer = array.array("H", [0x0000] * BUFFER_SIZE)
-buffer = np.array(raw_buffer, dtype=np.uint16)
-
 adc = analogbufio.BufferedIn(adc_pin, sample_rate=SAMPLE_RATE)
+
+def get_buffer() -> np.ndarray:
+    adc.readinto(raw_buffer)
+    return np.array(raw_buffer, dtype=np.uint16)
 
 # MIDI Setup
 led_midi = digitalio.DigitalInOut(led_midi_pin)
@@ -55,15 +58,19 @@ midi = adafruit_midi.MIDI(
     out_channel=MIDI_CHANNEL,
 )
 
+# Calibrate ADC
+mid = np.max(get_buffer())
+level_max = min(mid, 2 ** 16 - mid)
+
 note = 0
 while True:
 
     # Read data from ADC
-    adc.readinto(raw_buffer)
+    buffer = get_buffer()
     
     # Calculate max level
-    level = abs((np.max(buffer) - 2 ** 15) / (2 ** 15))
-    led_level.duty_cycle = level * (2 ** 16 - 1)
+    current_level = min(max(abs((np.max(buffer) - mid) / level_max), 0.0), 1.0)
+    led_level.duty_cycle = int(current_level * (2 ** 16 - 1))
 
     # Note no longer detected
     if note and level < LEVEL_RELEASE:
@@ -75,16 +82,18 @@ while True:
     # No note detected and level too low
     if not note and level < LEVEL_ATTACK:
         continue
+    
+    # Convert np.uint16 to np.int16
+    mean = int(np.mean(buffer))
+    buffer = np.array([x - mean for x in buffer], dtype=np.int16)
 
     # Use the Fast Fourier Transform to determine the peak frequency of the signal
     fft_data = ulab.utils.spectrogram(buffer)
-    # fft = fft[1 : (len(fft) // 2) - 1]
-    current_freq = np.argmax(fft) / BUFFER_SIZE * SAMPLE_RATE / 4
-
+    fft_data = fft_data[1 : (len(fft_data) // 2) - 1]
+    #fft_data = np.log(fft_data)
+    current_freq = np.argmax(fft_data) / BUFFER_SIZE * SAMPLE_RATE / 4
     # Determine MIDI note value
-    current_note = round(12 * (math.log2(freq) - LOG2_A4) + 69)
-
-    # TODO: If same as current note but different frequencies, pitch shift?
+    current_note = round(12 * (math.log(current_freq, 2) - LOG2_A4) + 69)
 
     # Release previous note
     if note and current_note != note:
