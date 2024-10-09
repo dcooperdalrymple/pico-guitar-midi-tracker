@@ -6,8 +6,12 @@ import board
 import analogbufio
 import array
 import ulab.numpy as np
-import ulab.utils
 import math
+
+try:
+    from ulab.utils import spectrogram
+except ImportError:
+    from ulab.scipy.signal import spectrogram
 
 SAMPLE_RATE = 44100
 BUFFER_SIZE = 2048
@@ -30,9 +34,11 @@ def fftfreq(buffer:np.ndarray, rate:int = SAMPLE_RATE, clip:int = 8) -> float:
         mean = int(np.mean(buffer))
         buffer = np.array([x - mean for x in buffer], dtype=np.int16)
     
-    fft_data = ulab.utils.spectrogram(buffer)
-    fft_data = fft_data[:len(fft_data) // 2]
-    return np.argmax(fft_data) / len(fft_data) * rate / 4
+    data = spectrogram(buffer)
+    data = np.log(data + 1e-7)
+    data = data[1:(len(data) // 2) - 1]
+
+    return np.argmax(data) / len(data) * rate / 4
 
 LOG2_A4 = math.log(440, 2)
 def hz_to_midi(freq:float) -> int|None:
