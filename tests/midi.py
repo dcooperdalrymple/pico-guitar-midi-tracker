@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: Copyright (c) 2024 Cooper Dalrymple
+#
+# SPDX-License-Identifier: MIT
+
 import time
 import board
 import busio
