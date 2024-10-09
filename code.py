@@ -20,11 +20,11 @@ from adafruit_midi.note_off import NoteOff
 from adafruit_midi.note_on import NoteOn
 
 # Constants
-SAMPLE_RATE = 44100
-BUFFER_SIZE = 4096
+SAMPLE_RATE = 192000
+BUFFER_SIZE = 2048
 MIDI_CHANNEL = 0
-LEVEL_ATTACK = 0.5
-LEVEL_RELEASE = 0.2
+LEVEL_ATTACK = 0.1 # Amount of difference in level to trigger a note
+LEVEL_RELEASE = 0.05 # Minimum level to sustain note
 
 LOG2_A4 = math.log(440, 2)
 
@@ -62,6 +62,7 @@ midi = adafruit_midi.MIDI(
 mid = np.max(get_buffer())
 level_max = min(mid, 2 ** 16 - mid)
 
+level = 0.0
 note = 0
 while True:
 
@@ -73,14 +74,16 @@ while True:
     led_level.duty_cycle = int(current_level * (2 ** 16 - 1))
 
     # Note no longer detected
-    if note and level < LEVEL_RELEASE:
+    if note and current_level < LEVEL_RELEASE:
         midi.send(NoteOff(note, 0))
         led_midi.value = False
+        level = current_level
         note = 0
+        print("Release")
         continue
 
     # No note detected and level too low
-    if not note and level < LEVEL_ATTACK:
+    if current_level - level < LEVEL_ATTACK:
         continue
     
     # Convert np.uint16 to np.int16
@@ -92,6 +95,9 @@ while True:
     fft_data = fft_data[1 : (len(fft_data) // 2) - 1]
     #fft_data = np.log(fft_data)
     current_freq = np.argmax(fft_data) / BUFFER_SIZE * SAMPLE_RATE / 4
+    if not current_freq:
+        continue
+    
     # Determine MIDI note value
     current_note = round(12 * (math.log(current_freq, 2) - LOG2_A4) + 69)
 
@@ -100,5 +106,8 @@ while True:
         midi.send(NoteOff(note, 0))
 
     # Press new note
-    midi.send(NoteOn(current_note, level * 127))
+    midi.send(NoteOn(current_note, int(current_level * 127)))
     led_midi.value = True
+    note = current_note
+    level = current_level
+    print("Press {:d}".format(current_note))
